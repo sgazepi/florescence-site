@@ -244,6 +244,18 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;
             <label for="f-email">Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
           </div>
           <div class="row2">
+            <label for="f-age">Age range
+              <select id="f-age" name="age" required>
+                <option value="">Choose a range</option>
+                <option>18–24</option>
+                <option>25–34</option>
+                <option>35–44</option>
+                <option>45–54</option>
+                <option>55–64</option>
+                <option>65 or older</option>
+                <option>Prefer not to say</option>
+              </select>
+            </label>
             <label for="f-country">Where do you live?
               <select id="f-country" name="country" autocomplete="country-name" required>
                 <option value="">Choose a country</option>
@@ -258,8 +270,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;
                 <option>Another country</option>
               </select>
             </label>
-            <label for="f-region">State, province or city<input id="f-region" name="region" autocomplete="address-level1" placeholder="e.g. New York"></label>
           </div>
+          <label for="f-region">State, province or city<input id="f-region" name="region" autocomplete="address-level1" placeholder="e.g. New York"></label>
           <label for="f-dx">What have you been diagnosed with?
             <select id="f-dx" name="diagnosis" required>
               <option value="">Choose one</option>
@@ -341,6 +353,7 @@ form.addEventListener("submit", async (e) => {
   const d = Object.fromEntries(new FormData(form));
   if (!d.name || !d.name.trim()) return say("Please add your first name.");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email || "")) return say("Please enter a valid email address, like name@example.com.");
+  if (!d.age) return say("Please choose your age range.");
   if (!d.country) return say("Please choose the country you live in.");
   if (!d.diagnosis) return say("Please choose what you've been diagnosed with.");
   if (d.diagnosis === "other" && !(d.diagnosisOther || "").trim()) return say("Please tell us what you were diagnosed with.");
@@ -354,6 +367,7 @@ form.addEventListener("submit", async (e) => {
     _captcha: "false",
     "First name": d.name.trim(),
     "Email": d.email.trim(),
+    "Age range": d.age,
     "Country": d.country,
     "State, province or city": (d.region || "").trim() || "-",
     "Diagnosis": d.diagnosis === "other" ? d.diagnosisOther.trim() : d.diagnosis,

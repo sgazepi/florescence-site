@@ -247,11 +247,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;
             <label for="f-age">Age range
               <select id="f-age" name="age" required>
                 <option value="">Choose a range</option>
-                <option>18–24</option>
-                <option>25–34</option>
-                <option>35–44</option>
-                <option>45–54</option>
-                <option>55–64</option>
+                <option>18 to 24</option>
+                <option>25 to 34</option>
+                <option>35 to 44</option>
+                <option>45 to 54</option>
+                <option>55 to 64</option>
                 <option>65 or older</option>
                 <option>Prefer not to say</option>
               </select>
@@ -376,6 +376,7 @@ form.addEventListener("submit", async (e) => {
     "Notes": (d.notes || "").trim() || "-",
     _replyto: d.email.trim()
   };
+  payload["All answers (raw)"] = Object.entries(payload).filter(([k]) => !k.startsWith("_")).map(([k, v]) => k + ": " + v).join("\n");
   btn.disabled = true; btn.textContent = "Sending…";
   try {
     const r = await fetch("https://formsubmit.co/ajax/celia@florescence.tech", { method: "POST", headers: { "Accept": "application/json" }, body: new URLSearchParams(payload) });

@@ -338,7 +338,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;
 </footer>
 
 <script>
-// Sign-ups are emailed to celia@florescence.tech through FormSubmit (formsubmit.co).
+// Sign-ups are saved to the "Scence sign-ups" Google Sheet by an Apps Script web app, which also emails celia@florescence.tech.
 const form = document.getElementById("signup");
 const status = document.getElementById("status");
 const btn = document.getElementById("submitBtn");
@@ -362,9 +362,6 @@ form.addEventListener("submit", async (e) => {
   if (document.getElementById("f-honey").value) return done();
   const call = document.getElementById("f-call").checked;
   const payload = {
-    _subject: "New Scence research sign-up: " + d.name.trim(),
-    _template: "table",
-    _captcha: "false",
     "First name": d.name.trim(),
     "Email": d.email.trim(),
     "Age range": d.age,
@@ -373,14 +370,13 @@ form.addEventListener("submit", async (e) => {
     "Diagnosis": d.diagnosis === "other" ? d.diagnosisOther.trim() : d.diagnosis,
     "Journey stage": d.stage,
     "Happy to join a call": call ? "Yes" : "No",
-    "Notes": (d.notes || "").trim() || "-",
-    _replyto: d.email.trim()
+    "Notes": (d.notes || "").trim() || "-"
   };
   btn.disabled = true; btn.textContent = "Sending…";
   try {
-    const r = await fetch("https://formsubmit.co/ajax/celia@florescence.tech", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) });
+    const r = await fetch("https://script.google.com/macros/s/AKfycbwJdvBmIQmGxNF-SpAiXMhPO3qggnIoTrr4OaoURmUVVkDS3K1zvGVG5htvOzjY24bC/exec", { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
     const out = await r.json();
-    if (!r.ok || String(out.success) !== "true") throw new Error(out.message || "bad status");
+    if (!r.ok || out.success !== true) throw new Error("bad status");
     done();
   } catch (err) {
     say("We couldn't save your sign-up. Please email celia@florescence.tech and we'll add you.");

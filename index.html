@@ -379,7 +379,7 @@ form.addEventListener("submit", async (e) => {
   payload["All answers (raw)"] = Object.entries(payload).filter(([k]) => !k.startsWith("_")).map(([k, v]) => k + ": " + v).join("\n");
   btn.disabled = true; btn.textContent = "Sending…";
   try {
-    const r = await fetch("https://formsubmit.co/ajax/celia@florescence.tech", { method: "POST", headers: { "Accept": "application/json" }, body: new URLSearchParams(payload) });
+    const r = await fetch("https://formsubmit.co/ajax/celia@florescence.tech", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) });
     const out = await r.json();
     if (!r.ok || String(out.success) !== "true") throw new Error(out.message || "bad status");
     done();
